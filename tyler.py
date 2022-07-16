@@ -1,4 +1,4 @@
-VERSION = "1.0.0" # this isn't in the actual release
+VERSION = "1.0.0" # Modified for Plattyler
 
 from traceback import format_exc
 from typing import final
@@ -174,7 +174,7 @@ class Tyler:
 
     @final
     def pygame_screen(self, width: int, height: int, flags: int = 0) -> None:
-        self.py_screen = pygame.display.set_mode((width, height), flags)
+        self.py_screen = pygame.display.set_mode((width, height), flags | pygame.SCALED, vsync=1)
         self.py_screen.fill(self.CLEAR_COLOR)
 
         self.width = width
@@ -277,6 +277,8 @@ class Tyler:
             if self.fps_check >= 2:
                 print(f"FPS: {round(1/delta, 1)}")
                 self.fps_check = 0
+        else:
+            delta = self.clock.tick() / 1000
 
         for event in pygame.event.get():
             match event.type:
