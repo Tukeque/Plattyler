@@ -2,6 +2,7 @@ from tyler import Tyler, Sprite, Scene
 from math import ceil, floor
 from pygame.locals import *
 from worlds import worlds, solids
+import loader
 import pygame
 
 GLOBAL_TEXTURE_DATA = [
@@ -13,6 +14,8 @@ GLOBAL_TEXTURE_DATA = [
     (PLAYER := "assets/player.jpg", 1, 1),
     (TRANSPARENT := "assets/transparent.png", 1, 1),
 ]
+X = 0
+Y = 1
 
 def cool_effect(num: float) -> float:
     return floor(num) + round((num % 1) * 8) / 8
@@ -69,20 +72,15 @@ class Main(Scene):
         BUSH
     ]
 
-    def load_world(self, world: str) -> None:
-        for x in range(self.tyler.tile_w):
-            for y in range(self.tyler.tile_h):
-                self.tyler.get_tile(self.tyler.backgrounds[0], x, y).texture_index = self.tyler.texture(self.BLOCKS[worlds[world][-y-1][x]])
-
     def check_tile(self, offx: int, offy: int) -> bool:
         x = floor(self.player.x + offx)
         y = floor(self.player.y + offy)
 
-        if x < 0 or x >= self.tyler.tile_w or y < 0 or y >= self.tyler.tile_h:
+        if x < 0 or x >= loader.world["size"][X] * self.tyler.tile_w or y < 0 or y >= loader.world["size"][Y] * self.tyler.tile_h:
             return True
 
-        tile = self.tyler.get_tile(self.tyler.backgrounds[0], x, y)
-        if tile.texture_index in solids:
+        tile = loader.get_tile(x, y)
+        if tile in loader.solids:
             return True
         return False
 
@@ -152,9 +150,9 @@ class Main(Scene):
 
     def start(self) -> None:
         self.tyler.fill(self.tyler.backgrounds[0], self.tyler.texture(DIRT))
-        self.load_world("test2")
+        loader.load_world("assets/levels/level00.json")
 
-        self.player = Player("pepe", 3, 3)
+        self.player = Player("pepe", 3, 4)
         self.tyler.sprites["player"] = Sprite(self.tyler.texture(PLAYER), self.player.x, self.player.y, 1, self.tyler)
 
     def event(self, event) -> None:
@@ -164,6 +162,10 @@ class Main(Scene):
                     self.player.dy += self.player.jump
 
     def draw(self) -> None:
+        for x in range(self.tyler.tile_w):
+            for y in range(self.tyler.tile_h):
+                self.tyler.get_tile(self.tyler.backgrounds[0], x, y).texture_index = self.tyler.texture(self.BLOCKS[loader.get_tile(x, y)])
+
         self.tyler.draw(0, 0, self.tyler.backgrounds[0])
 
     def loop(self, delta) -> None:
