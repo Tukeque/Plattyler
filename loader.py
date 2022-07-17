@@ -13,7 +13,6 @@ def load_world(file_name: str) -> None:
 
     f = open(file_name, "r")
     world = json.load(f)
-    print(world)
 
 def get_tile(x: int, y: int) -> int:
     return world["map"][-y-1][x]
