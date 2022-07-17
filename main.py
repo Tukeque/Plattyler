@@ -15,16 +15,7 @@ GLOBAL_TEXTURE_DATA = [
 ]
 
 def cool_effect(num: float) -> float:
-    points = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
-    offsets = []
-
-    for point in points:
-        offsets.append(abs(point - (num % 1)))
-
-    closest = min(offsets)
-    result = floor(num) + points[offsets.index(closest)]
-
-    return result
+    return floor(num) + round((num % 1) * 8) / 8
 
 class Plattyler(Tyler):
     NAME = "Plattyler"
