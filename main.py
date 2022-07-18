@@ -40,8 +40,8 @@ class Player:
 
     accel = 40
     deaccel = 80
-    max_speedx = 7
-    max_speedy = 20
+    max_speedx = 10
+    max_speedy = 18
     jump = 18.5
     gravity = 40
 
